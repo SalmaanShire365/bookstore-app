@@ -10,3 +10,4 @@ db/*.db
 Dockerfile
 *.zip
 deploy.zip
+*.zip
