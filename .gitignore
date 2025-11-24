@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+venv/
+env/
+.env
+db/*.exe
+db/*.db
+Dockerfile
