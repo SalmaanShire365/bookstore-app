@@ -8,3 +8,5 @@ env/
 db/*.exe
 db/*.db
 Dockerfile
+*.zip
+deploy.zip
