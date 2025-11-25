@@ -20,7 +20,7 @@ except Exception as e:
 
 db = client[DATABASE_NAME]
 books_collection = db['books']
-#reviews_collection = db['reviews']
+reviews_collection = db['reviews']
 users_collection = db['users']
 
 DATABASE = 'db/books.db'
@@ -127,16 +127,16 @@ def serialize_book(book):
     return book
 
 
-#def serialize_review(review):
-#    ""Convert MongoDB review document to JSON-serializable format.""
-#    if review and '_id' in review:
-#        review['review_id'] = str(review['_id'])
-#        del review['_id']
-#        if 'book_id' in review and isinstance(review['book_id'], ObjectId):
-#            review['book_id'] = str(review['book_id'])
-#        if 'user_id' in review and isinstance(review['user_id'], ObjectId):
-#            review['user_id'] = str(review['user_id'])
-#    return review
+def serialize_review(review):
+    """Convert MongoDB review document to JSON-serializable format."""
+    if review and '_id' in review:
+        review['review_id'] = str(review['_id'])
+        del review['_id']
+        if 'book_id' in review and isinstance(review['book_id'], ObjectId):
+            review['book_id'] = str(review['book_id'])
+        if 'user_id' in review and isinstance(review['user_id'], ObjectId):
+            review['user_id'] = str(review['user_id'])
+    return review
 
 
 
@@ -324,44 +324,44 @@ def delete_book(book_id):
 
 
 # ==================== REVIEWS ENDPOINTS ====================
-#
-#@app.route('/api/reviews', methods=['GET'])
-#@timeit
-#def get_all_reviews():
-#    # Get all reviews from MongoDB.
-#    reviews = list(reviews_collection.find())
-#    review_list = [serialize_review(review.copy()) for review in reviews]
-#    return jsonify({'reviews': review_list})
-#@app.route('/api/add_review', methods=['POST'])
-#@timeit
-#def add_review():
-#    # Add a new review to MongoDB.
-#    data = request.get_json()
-#    book_id = data.get('book_id')
-#    user = data.get('user_name')
-#    rating = data.get('rating')
-#    comment = data.get('review_text')
-#
-#    review = {
-#        'book_id': book_id,
-#        'user': user,
-#        'rating': rating,
-#        'comment': comment,
-#        'review_date': datetime.utcnow().isoformat()
-#    }
-#    result = reviews_collection.insert_one(review)
-#    
-#    return jsonify({
-#        'message': 'Review added successfully',
-#        'review_id': str(result.inserted_id)
-#    })
-#@app.route('/api/reviews/book/<book_id>', methods=['GET'])
-#@timeit
-#def get_reviews_by_book(book_id):
-#    # Get all reviews for a specific book
-#    reviews = list(reviews_collection.find({'book_id': book_id}))
-#    review_list = [serialize_review(review.copy()) for review in reviews]
-#    return jsonify({'reviews': review_list, 'count': len(review_list)})
+
+@app.route('/api/reviews', methods=['GET'])
+@timeit
+def get_all_reviews():
+    # Get all reviews from MongoDB.
+    reviews = list(reviews_collection.find())
+    review_list = [serialize_review(review.copy()) for review in reviews]
+    return jsonify({'reviews': review_list})
+@app.route('/api/add_review', methods=['POST'])
+@timeit
+def add_review():
+    # Add a new review to MongoDB.
+    data = request.get_json()
+    book_id = data.get('book_id')
+    user = data.get('user_name')
+    rating = data.get('rating')
+    comment = data.get('review_text')
+
+    review = {
+        'book_id': book_id,
+        'user': user,
+        'rating': rating,
+        'comment': comment,
+        'review_date': datetime.utcnow().isoformat()
+    }
+    result = reviews_collection.insert_one(review)
+    
+    return jsonify({
+        'message': 'Review added successfully',
+        'review_id': str(result.inserted_id)
+    })
+@app.route('/api/reviews/book/<book_id>', methods=['GET'])
+@timeit
+def get_reviews_by_book(book_id):
+    # Get all reviews for a specific book
+    reviews = list(reviews_collection.find({'book_id': book_id}))
+    review_list = [serialize_review(review.copy()) for review in reviews]
+    return jsonify({'reviews': review_list, 'count': len(review_list)})
 
 # ==================== LOGS ENDPOINTS ====================
 
